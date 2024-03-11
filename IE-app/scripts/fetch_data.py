@@ -26,7 +26,7 @@ def fetch_weather_data(lat, lng):
         raise Exception(f"Failed to fetch weather data: Status code {response.status_code}")
 
 if __name__ == "__main__":
-    bike_url = "https://api.jcdecaux.com/vls/v1/stations?contract=maribor&apiKey=your_api_key"
+    bike_url = "https://api.jcdecaux.com/vls/v1/stations?contract=maribor&apiKey=5e150537116dbc1786ce5bec6975a8603286526b"
     bike_data = fetch_bike_data(bike_url)
     
     combined_dir = os.path.join(os.getcwd(), '..', 'data', 'combined')
