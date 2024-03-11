@@ -8,13 +8,16 @@ on:
 jobs:
   fetch_and_process_data:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: IE-app
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3 # Updated to the latest version
-
+      uses: actions/checkout@v3
+      
     - name: Set up Python
-      uses: actions/setup-python@v4 # Updated to the latest version, assuming v4 supports Node.js 20
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
 
@@ -26,4 +29,4 @@ jobs:
         pip install openmeteo-requests
 
     - name: Run fetch data script
-      run: python IE-app/scripts/fetch_data.py
+      run: python scripts/fetch_data.py
