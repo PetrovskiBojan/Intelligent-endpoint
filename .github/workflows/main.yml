@@ -1,4 +1,4 @@
-name: Run Fetch Script and Commit Changes
+name: Process and Commit Data
 
 on:
   schedule:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  process_data:
+  fetch_process_commit:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,17 +19,16 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: |
-        pip install requests pandas
+      run: pip install requests pandas
 
     - name: Run fetch data script
-      run: python IE-app/scripts/fetch_data.py
-      working-directory: .
+      run: python fetch_data.py
+      working-directory: IE-app/scripts
 
     - name: Commit and push changes
       run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "GitHub Actions"
-        git add -A
-        git commit -m "Automatically append data to CSV files" || echo "No changes to commit"
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add IE-app/data/combined/*.csv
+        git commit -m "Append data to CSV files" -a || echo "No changes to commit"
         git push
