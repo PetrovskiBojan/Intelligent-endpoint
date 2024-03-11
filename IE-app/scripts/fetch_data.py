@@ -29,7 +29,10 @@ if __name__ == "__main__":
     bike_url = "https://api.jcdecaux.com/vls/v1/stations?contract=maribor&apiKey=5e150537116dbc1786ce5bec6975a8603286526b"
     bike_data = fetch_bike_data(bike_url)
 
-    combined_dir = 'IE-app/data/combined'  # Adjusted path
+    # Ensure the combined directory exists
+    combined_dir = os.path.join('IE-app', 'data', 'combined')  # Adjust path if necessary
+    os.makedirs(combined_dir, exist_ok=True)  # Create the directory if it does not exist
+
     for station in bike_data:
         time_now, temperature, precipitation_probability = fetch_weather_data(station['position']['lat'], station['position']['lng'])
         combined_data = pd.DataFrame({
@@ -40,8 +43,8 @@ if __name__ == "__main__":
         })
 
         filename = f"{station['number']}_{station['name'].replace(' ', '_').replace(',', '').replace('-', '_')}_combined.csv"
-        filepath = f"{combined_dir}/{filename}"  # Simplified path construction
-        if pd.read_csv(filepath).empty if os.path.exists(filepath) else False:
+        filepath = os.path.join(combined_dir, filename)
+        if os.path.exists(filepath) and not pd.read_csv(filepath).empty:
             combined_data.to_csv(filepath, mode='a', header=False, index=False)
         else:
             combined_data.to_csv(filepath, index=False)
