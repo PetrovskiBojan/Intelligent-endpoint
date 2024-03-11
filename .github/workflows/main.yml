@@ -28,7 +28,7 @@ jobs:
     - name: Commit and push changes
       run: |
         git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@github.com'
+        git config --global user.email 'bojan.petrovski@student.um.si'
         git add IE-app/data/combined/*.csv
         git commit -m "Append data to CSV files" -a || echo "No changes to commit"
         git push
