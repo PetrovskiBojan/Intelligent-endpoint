@@ -23,5 +23,5 @@ jobs:
         pip install requests pandas
 
     - name: Run fetch data script
-      run: python IE-app/scripts/fetch_data.py
+      run: python fetch_data.py
       working-directory: IE-app/scripts
