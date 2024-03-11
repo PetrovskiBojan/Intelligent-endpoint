@@ -25,7 +25,7 @@ jobs:
           pip install requests pandas
 
       - name: Execute the script
-        run: IE-app/scripts/fetch_data.py
+        run: python IE-app/scripts/fetch_data.py
       
       - name: Configure git
         run: |
