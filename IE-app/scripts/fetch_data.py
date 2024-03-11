@@ -28,10 +28,8 @@ def fetch_weather_data(lat, lng):
 if __name__ == "__main__":
     bike_url = "https://api.jcdecaux.com/vls/v1/stations?contract=maribor&apiKey=5e150537116dbc1786ce5bec6975a8603286526b"
     bike_data = fetch_bike_data(bike_url)
-    
-    combined_dir = os.path.join(os.getcwd(), '..', 'data', 'combined')
-    os.makedirs(combined_dir, exist_ok=True)
 
+    combined_dir = 'IE-app/data/combined'  # Adjusted path
     for station in bike_data:
         time_now, temperature, precipitation_probability = fetch_weather_data(station['position']['lat'], station['position']['lng'])
         combined_data = pd.DataFrame({
@@ -42,18 +40,8 @@ if __name__ == "__main__":
         })
 
         filename = f"{station['number']}_{station['name'].replace(' ', '_').replace(',', '').replace('-', '_')}_combined.csv"
-        filepath = os.path.join(combined_dir, filename)
-
-        print(f"Attempting to append to: {filepath}")
-        if os.path.exists(filepath):
-            original_size = os.path.getsize(filepath)
-            print(f"Original file size: {original_size} bytes")
+        filepath = f"{combined_dir}/{filename}"  # Simplified path construction
+        if pd.read_csv(filepath).empty if os.path.exists(filepath) else False:
             combined_data.to_csv(filepath, mode='a', header=False, index=False)
-            print(f"Data appended to {filepath}.")
         else:
             combined_data.to_csv(filepath, index=False)
-            print(f"New file created at {filepath}.")
-
-    print("Data fetching, processing, and combining completed.")
-    print("Current directory:", os.getcwd())
-    print("Contents of 'data/combined':", os.listdir(combined_dir))
