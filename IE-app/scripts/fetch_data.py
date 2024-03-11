@@ -34,7 +34,8 @@ if __name__ == "__main__":
     bike_data = fetch_bike_data(bike_url)
     
     if bike_data:
-        os.makedirs('data/combined', exist_ok=True)
+        combined_dir = 'IE-app/data/combined'  # Updated path
+        os.makedirs(combined_dir, exist_ok=True)
         for station in bike_data:
             # Use station's lat & lng to fetch weather data
             time_now, temperature, precipitation_probability = fetch_weather_data(station['position']['lat'], station['position']['lng'])
@@ -46,7 +47,7 @@ if __name__ == "__main__":
                 'available_bike_stands': [station['available_bike_stands']]
             })
             filename = f"{station['number']}_{station['name'].replace(' ', '_').replace(',', '').replace('-', '_')}_combined.csv"
-            filepath = os.path.join('data/combined', filename)
+            filepath = os.path.join(combined_dir, filename)  # Use the updated directory path
             # Append if file exists; otherwise, write new
             if os.path.exists(filepath):
                 combined_data.to_csv(filepath, mode='a', header=False, index=False)
