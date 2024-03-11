@@ -21,6 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         pip install requests pandas
+        pip install retry-requests
+        pip install requests_cache
+        pip install openmeteo-requests
 
     - name: Run fetch data script
       run: python IE-app/scripts/fetch_data.py
