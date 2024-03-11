@@ -1,0 +1,26 @@
+name: Run Fetch Script Hourly
+
+on:
+  schedule:
+    # Runs at the start of every hour
+    - cron: '0 * * * *'
+
+jobs:
+  fetch_and_process_data:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install requests pandas
+
+    - name: Run fetch data script
+      run: python IE-app/scripts/fetch_data.py
