@@ -54,3 +54,5 @@ if __name__ == "__main__":
             else:
                 combined_data.to_csv(filepath, index=False)
         print("Data fetching, processing, and combining completed.")
+        print("Current directory:", os.getcwd())
+        print("Contents of 'data/combined':", os.listdir('IE-app/data/combined'))
