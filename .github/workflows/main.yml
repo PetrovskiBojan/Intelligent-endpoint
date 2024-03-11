@@ -13,7 +13,6 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
         with:
-          # This token is provided by Actions, you do not need to create it yourself.
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python environment
@@ -26,8 +25,7 @@ jobs:
           pip install requests pandas
 
       - name: Execute the script
-        run: python path/to/your_script.py
-        # Ensure your script's path is correct.
+        run: IE-app/scripts/fetch_data.py
       
       - name: Configure git
         run: |
