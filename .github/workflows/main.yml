@@ -11,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3 # Updated to the latest version
+      uses: actions/checkout@v3 # Updated to v3
 
     - name: Set up Python
-      uses: actions/setup-python@v4 # Updated to the latest version, assuming v4 supports Node.js 20
+      uses: actions/setup-python@v4 # Updated to v4
       with:
         python-version: '3.x'
 
@@ -25,5 +25,9 @@ jobs:
         pip install requests_cache
         pip install openmeteo-requests
 
+    - name: Change to script directory
+      run: cd IE-app/scripts
+
     - name: Run fetch data script
-      run: python IE-app/scripts/fetch_data.py
+      run: python fetch_data.py
+      working-directory: IE-app/scripts
