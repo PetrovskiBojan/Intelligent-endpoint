@@ -1,4 +1,7 @@
 import json
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+import os
 
 def preprocess_data(csv_path, processed_dir, scaler_params_dir):
     # Load the data
