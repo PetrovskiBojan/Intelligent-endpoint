@@ -1,63 +1,30 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from fastapi.testclient import TestClient
+from unittest.mock import patch
+import pytest
 import numpy as np
-import os
-from tensorflow.keras.models import load_model
-from datetime import datetime
-import json
+from API.app import app, PredictionRequest # Adjusted import statement
 
-app = FastAPI()
+client = TestClient(app)
 
-class PredictionRequest(BaseModel):
-    station_name: str
-    current_time: datetime
-    temperatures_2m: list[float]
-    precipitation_probabilities: list[float]
-
-# Adjusted path to where the models and scaler parameters are stored
-MODELS_DIR = os.path.join("..", "models")
-SCALER_DIR = os.path.join("..", "data", "scaler_params")
-
-def load_scaler_parameters(station_name: str):
-    scaler_path = os.path.join(SCALER_DIR, f"{station_name}_scaler_params.json")
-    if not os.path.exists(scaler_path):
-        raise FileNotFoundError(f"Scaler parameters not found for station {station_name}")
-    
-    with open(scaler_path) as fp:
-        scaler_parameters = json.load(fp)
-    
-    return np.array(scaler_parameters["min_"]), np.array(scaler_parameters["scale_"])
-
-def normalize(data, min_, scale_):
-    return (data - min_) / scale_
-
-@app.post("/predict")
-async def predict(request: PredictionRequest):
-    model_path = os.path.join(MODELS_DIR, f"{request.station_name}.h5")
-    
-    if not os.path.exists(model_path):
-        raise HTTPException(status_code=404, detail="Model not found for the given station")
-
-    min_, scale_ = load_scaler_parameters(request.station_name)
-    
-    model = load_model(model_path)
-
-    predictions = []
-    for i in range(7):
-        temperature = np.array([request.temperatures_2m[i]])
-        precipitation = np.array([request.precipitation_probabilities[i]])
-        input_features = np.hstack((temperature, precipitation))
-        normalized_features = normalize(input_features, min_, scale_)
+def test_predict():
+    # Mock the model loading and prediction logic
+    with patch("API.app.load_model") as mock_load_model, \
+         patch("API.app.load_scaler_parameters") as mock_load_scaler_parameters:
+        # Mock the model to return a dummy prediction
+        mock_load_model.return_value.predict.return_value = np.array([0.5])
+        # Mock the scaler parameters to return dummy values
+        mock_load_scaler_parameters.return_value = (np.array([0]), np.array([1]))
         
-        # Reshape for prediction
-        normalized_features = normalized_features.reshape(1, 1, 2)
+        # Prepare the request data
+        request_data = {
+            "station_name": "1_GOSPOSVETSKA_C.___TURNERJEVA_UL._combined",
+            "current_time": "2024-03-11 13:35:00",
+            "temperatures_2m": [22.3, 22.7, 13.0, 13.5, 24.0, 34.5, 35.0],
+            "precipitation_probabilities": [0.1, 0.05, 0.0, 0.20, 0.05, 0.3, 0.25]
+        }
         
-        pred = model.predict(normalized_features).flatten()[0]
-        rounded_pred = int(round(pred))
-        predictions.append(rounded_pred)
-
-    return {"predictions": predictions}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+        # Send a POST request to the /predict endpoint
+        response = client.post("/predict", json=request_data)
+        
+        # Assert the response status code is 200 (OK)
+        assert response.status_code == 200
