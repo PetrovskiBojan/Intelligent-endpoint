@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [core]
     remote = origin
 ['remote "origin"']
@@ -5,3 +6,8 @@
     endpointurl = https://dagshub.com/PetrovskiBojan/Intelligent-endpoint.s3
     access_key_id = 2d77e0ee299fed1090cc3a1ccc101c78feffce27
     secret_access_key = 2d77e0ee299fed1090cc3a1ccc101c78feffce27
+=======
+['remote "origin"']
+    url = s3://dvc
+    endpointurl = https://dagshub.com/PetrovskiBojan/Intelligent-endpoint.s3
+>>>>>>> 907c334a83e367222bd0b73f1d3afe2890022d8e
